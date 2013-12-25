@@ -9,9 +9,9 @@
 ;rows     = 'ABCDEFGHI'
 ;cols     = digits
 
-(defconstant digits "12345678")
-(defconstant rows "ABCDEFGHI")
-(defconstant cols digits)
+(defconstant +digits+ "12345678")
+(defconstant +rows+ "ABCDEFGHI")
+(defconstant +cols+ digits)
 
 
 
