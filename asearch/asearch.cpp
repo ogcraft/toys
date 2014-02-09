@@ -140,10 +140,15 @@ int main(int argc, char* argv[])
   v.save("asearch.dat", raw_ascii);
 #endif
   
-  mat data(2,20);  
-  sf_count_t nframes = load_stereo_file_into_matrix(sndfile, 20, data );
+  mat D(2,20);  
+  sf_count_t nframes = load_stereo_file_into_matrix(sndfile, 20, D );
 
-  std::cout << data << std::endl;
+  std::cout << D << std::endl;
+  mat M = mean(D);
+  std::cout << "Mono: " << M << std::endl;
+  
+
+
 
   int err = sf_close(sndfile);
   if(err)
@@ -151,5 +156,6 @@ int main(int argc, char* argv[])
     std::cout << "Close Error: " << sf_strerror(sndfile) << std::endl;
     return 1;
   }
+
   return ret;
 }
