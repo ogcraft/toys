@@ -3,4 +3,4 @@ project (asearch)
 
 add_executable (asearch asearch.cpp)
 
-target_link_libraries (asearch  armadillo sndfile)   
+target_link_libraries (asearch  armadillo sndfile boost_iostreams boost_system )   
