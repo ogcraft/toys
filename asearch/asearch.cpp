@@ -15,10 +15,10 @@ using namespace arma;
 #define MAX(x,y)    ((x) > (y) ? (x) : (y))
 #define MIN(x,y)    ((x) < (y) ? (x) : (y))
 
-const char* chimes_wav = "/Users/olegg/git/toys/asearch/chimes.wav";
-const char* prom_dvd = "/Users/olegg/asearchdata/prometheus-02-eng-dvd.wav";
-const char* prom_tst = "/Users/olegg/asearchdata/prometheus-ts.wav";
-const char* dq = "/Users/olegg/asearchdata/dancingqueen.wav";
+//const char* chimes_wav = "/Users/olegg/git/toys/asearch/chimes.wav";
+//const char* prom_dvd = "/Users/olegg/asearchdata/prometheus-02-eng-dvd.wav";
+//const char* prom_tst = "/Users/olegg/asearchdata/prometheus-ts.wav";
+//const char* dq = "/Users/olegg/asearchdata/dancingqueen.wav";
 
 void dump_sf_info(const SF_INFO& sf_info, const char* msg = "")
 {
@@ -123,9 +123,9 @@ int main(int argc, char* argv[])
   dump_snd_file_info(wavfile);
 
   SF_INFO sndinfo;
-  SNDFILE *sndfile = sf_open(dq, SFM_READ, &sndinfo);
+  SNDFILE *sndfile = sf_open(wavfile, SFM_READ, &sndinfo);
   if (sndfile == NULL) {
-    std::cout << "Error reading source file '" << dq << "': " << sf_strerror(sndfile) << std::endl;
+    std::cout << "Error reading source file '" << wavfile << "': " << sf_strerror(sndfile) << std::endl;
     return 1;
   }
 
@@ -139,11 +139,12 @@ int main(int argc, char* argv[])
   //std::cout << "v: " << v << std::endl;
   v.save("asearch.dat", raw_ascii);
 #endif
-  
+  sf_seek(sndfile, 50000, SEEK_SET);
   mat D(2,20);  
   sf_count_t nframes = load_stereo_file_into_matrix(sndfile, 20, D );
 
   std::cout << D << std::endl;
+  
   mat M = mean(D);
   std::cout << "Mono: " << M << std::endl;
   
