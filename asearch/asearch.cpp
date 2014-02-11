@@ -139,17 +139,29 @@ int main(int argc, char* argv[])
   //std::cout << "v: " << v << std::endl;
   v.save("asearch.dat", raw_ascii);
 #endif
-  sf_seek(sndfile, 50000, SEEK_SET);
-  mat D(2,20);  
-  sf_count_t nframes = load_stereo_file_into_matrix(sndfile, 20, D );
+  //sf_seek(sndfile, 50000, SEEK_SET);
+  int nframes = 441000;
+  mat D(2, nframes);  
+  sf_count_t read_frames = load_stereo_file_into_matrix(sndfile, nframes, D );
 
-  std::cout << D << std::endl;
+  //std::cout << D << std::endl;
   
+  std::cout << "D.n_cols: " << D.n_cols << " D.n_rows: " << D.n_rows << std::endl;
   mat M = mean(D);
-  std::cout << "Mono: " << M << std::endl;
+  std::cout << "Mean calculated " << std::endl;
+  //std::cout << "Mono: " << M.row(0) << std::endl;
+
+  std::cout << "M.n_cols: " << M.n_cols << " M.n_rows: " << M.n_rows << " read_frames: " << read_frames << std::endl;
   
+  mat Spectr;
+  int ntffs = 512;
+  
+  spectrogram(M, ntffs, ntffs/2, Spectr);
 
-
+  std::cout << "Spectr len: " << Spectr.n_elem << " cols: " << Spectr.n_cols << " rows: " << Spectr.n_rows 
+  << " sizeof: " << sizeof(Spectr) << std::endl;
+  
+  Spectr.save("asearch.dat", raw_ascii);
 
   int err = sf_close(sndfile);
   if(err)
