@@ -7,13 +7,13 @@
 #include <sndfile.h>
 #include "armadillo"
 #include "utils.h"
-#include "fplib/FingerprintExtractor.h"
+#include "sigproc.h"
+//#include "fplib/FingerprintExtractor.h"
 
 using namespace arma;
 
-#define ARRAY_LEN(x)  ((int) (sizeof (x) / sizeof (x [0])))
-#define MAX(x,y)    ((x) > (y) ? (x) : (y))
-#define MIN(x,y)    ((x) < (y) ? (x) : (y))
+
+
 
 //const char* chimes_wav = "/Users/olegg/git/toys/asearch/chimes.wav";
 //const char* prom_dvd = "/Users/olegg/asearchdata/prometheus-02-eng-dvd.wav";
@@ -94,7 +94,7 @@ int main(int argc, char* argv[])
   sf_command (NULL, SFC_GET_LIB_VERSION, sndflile_ver, sizeof (sndflile_ver)) ;
   std::cout << "Sndfile version: " << sndflile_ver << std::endl << std::endl;
   //FingerprintExtractor fextr = FingerprintExtractor;
-  std::cout << "fplib version: " << fingerprint::FingerprintExtractor::getVersion() << std::endl;
+  //std::cout << "fplib version: " << fingerprint::FingerprintExtractor::getVersion() << std::endl;
 
 
   if(argc < 2) {
@@ -102,12 +102,14 @@ int main(int argc, char* argv[])
     exit(1);
   }
 
-  size_t min_duration_ms = fingerprint::FingerprintExtractor::getMinimumDurationMs();
-  std::cout << "Minimal duartion if audio " << min_duration_ms << " msec";
+  //size_t min_duration_ms = fingerprint::FingerprintExtractor::getMinimumDurationMs();
+  //std::cout << "Minimal duartion if audio " << min_duration_ms << " msec";
   const char* wavfile = argv[1]; 
   std::cout << "Running " << argv[0] << " with '" << argv[1] << "'" << std::endl << std::endl;
   
   dump_snd_file_info(wavfile);
+
+  vector<Filter> filters;// = readFilters(descrfn);
 
   SF_INFO sndinfo;
   SNDFILE *sndfile = sf_open(wavfile, SFM_READ, &sndinfo);
