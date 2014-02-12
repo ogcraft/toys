@@ -6,8 +6,8 @@
 
 #include <sndfile.h>
 #include "armadillo"
-//#include "gnuplot-iostream.h"
 #include "utils.h"
+#include "fplib/FingerprintExtractor.h"
 
 using namespace arma;
 
@@ -62,47 +62,76 @@ void dump_snd_file_info(const char* fn)
     std::cout << "dump_snd_file_info(): Close Error: " << err << std::endl;
   }
 }
+#if 0
+for (;;)
+      {
+         // read some data from the file
+         size_t sz = read_some_source( pPCMBuffer );
+         if ( sz == 0 )
+         {
+            cerr << "ERROR: Insufficient input data!" << endl;
+            exit(1); // goodbye!
+         }
 
-sf_count_t
-sfx_mix_mono_read_double (SNDFILE * file, double * data, sf_count_t datalen)
+         // Process to create the fingerprint. If process returns true
+         // it means he's happy with what he has.
+         if ( fextr.process( pPCMBuffer, sz
+                 /*, bool: set it to true if it's EOF */ ) )
+            break;
+      }
+
+      // get the fingerprint data
+      pair<const char*, size_t> fpData = fextr.getFingerprint();
+
+#endif
+
+int main(int argc, char* argv[])
 {
-  SF_INFO info ;
-
-  sf_command (file, SFC_GET_CURRENT_SF_INFO, &info, sizeof (info)) ;
-
-  if (info.channels == 1)
-    return sf_read_double (file, data, datalen) ;
-
-  static double multi_data [2048] ;
-  int k, ch, frames_read ;
-  sf_count_t dataout = 0 ;
-
-  while (dataout < datalen)
-  { 
-    int this_read ;
-    
-    this_read = MIN(ARRAY_LEN (multi_data) / info.channels, datalen) ;
-
-    frames_read = sf_readf_double (file, multi_data, this_read) ;
-    if (frames_read == 0)
-      break ;
-
-    for (k = 0 ; k < frames_read ; k++)
-    { 
-      double mix = 0.0 ;
-
-      for (ch = 0 ; ch < info.channels ; ch++)
-        mix += multi_data [k * info.channels + ch] ;
-      data [dataout + k] = mix / info.channels ;
-    } ;
-
-    dataout += this_read ;
-  } ;
-
-  return dataout ;
-} /* sfx_mix_mono_read_double */
+  int ret = 0;
+  
+  std::cout << "Armadillo version: " << arma_version::as_string() << std::endl;
+  char  sndflile_ver [128] ;
+  sf_command (NULL, SFC_GET_LIB_VERSION, sndflile_ver, sizeof (sndflile_ver)) ;
+  std::cout << "Sndfile version: " << sndflile_ver << std::endl << std::endl;
+  //FingerprintExtractor fextr = FingerprintExtractor;
+  std::cout << "fplib version: " << fingerprint::FingerprintExtractor::getVersion() << std::endl;
 
 
+  if(argc < 2) {
+    std::cout << "Usage: " << argv[0] << " wav_file_name" << std::endl;
+    exit(1);
+  }
+
+  size_t min_duration_ms = fingerprint::FingerprintExtractor::getMinimumDurationMs();
+  std::cout << "Minimal duartion if audio " << min_duration_ms << " msec";
+  const char* wavfile = argv[1]; 
+  std::cout << "Running " << argv[0] << " with '" << argv[1] << "'" << std::endl << std::endl;
+  
+  dump_snd_file_info(wavfile);
+
+  SF_INFO sndinfo;
+  SNDFILE *sndfile = sf_open(wavfile, SFM_READ, &sndinfo);
+  if (sndfile == NULL) {
+    std::cout << "Error reading source file '" << wavfile << "': " << sf_strerror(sndfile) << std::endl;
+    return 1;
+  }
+
+  int nchannels = sndinfo.channels;
+
+
+
+
+
+  int err = sf_close(sndfile);
+  if(err)
+  {
+    std::cout << "Close Error: " << sf_strerror(sndfile) << std::endl;
+    return 1;
+  }
+
+  return ret;
+}
+#if 0
 int main(int argc, char* argv[])
 {
   int ret = 0;
@@ -172,3 +201,4 @@ int main(int argc, char* argv[])
 
   return ret;
 }
+#endif

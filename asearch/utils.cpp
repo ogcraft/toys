@@ -1,4 +1,3 @@
-
 #include "utils.h"
 
 using namespace arma;
@@ -19,7 +18,7 @@ sf_count_t load_stereo_file_into_matrix(SNDFILE *sndfile, sf_count_t nframes, ma
   }
   return count;
 }
-
+#if 0
 // Create a hamming window of windowLength samples in buffer
 vec hamming(int window_sz) {
   vec r(window_sz);
@@ -77,3 +76,5 @@ void spectrogram(const mat& S, int window_sz, int hop_sz, mat& result)
   } // Excuse the formatting, the while ends here.
 
 }
+
+#endif
