@@ -3,6 +3,8 @@
 #include <vector>
 #include <algorithm>
 #include <memory>
+#include <string>         // std::string
+#include <bitset>         // std::bitset
 
 #include <sndfile.h>
 #include "armadillo"
@@ -85,6 +87,40 @@ for (;;)
 
 #endif
 
+int test1(const char* wavfn) 
+{
+    
+  vector<Filter> filters;
+  printf ("Reading %s...\n", wavfn);
+  unsigned int nsamples = 0, freq = 0;
+  float * samples = wavread(wavfn, &nsamples, &freq);
+
+  if (!samples) {
+    printf("Error reading wave file.\n");
+    return 0;
+  }
+
+  unsigned int nbits;
+  unsigned int * bits = wav2bits(filters, samples, nsamples, freq, &nbits);
+
+  free(samples);
+
+  printf("Writing %d keys...\n", nbits);
+
+  //writebits(bits, nbits, outfn);
+  
+  for (unsigned int i = 0; i < 1000 /* nbits */; i++) {
+	  std::bitset<32> b(bits[i]);
+	  std::cout << b << std::endl;
+  }
+
+  free(bits);
+
+  return 0;  
+  
+}
+
+
 int main(int argc, char* argv[])
 {
   int ret = 0;
@@ -131,8 +167,12 @@ int main(int argc, char* argv[])
     return 1;
   }
 
+  test1(wavfile);
+  
   return ret;
 }
+
+////////////////////////////////////////
 #if 0
 int main(int argc, char* argv[])
 {

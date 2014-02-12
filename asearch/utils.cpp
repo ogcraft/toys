@@ -18,6 +18,27 @@ sf_count_t load_stereo_file_into_matrix(SNDFILE *sndfile, sf_count_t nframes, ma
   }
   return count;
 }
+
+void writebits(unsigned int bits[], unsigned int nbits, char * fn) {
+	FILE * f = fopen(fn, "wb");
+	if (!f) {
+		printf("Error: Can't open %s for writing.\n", fn);
+		exit(1);
+	}
+
+	unsigned int t = 32000; // special case to represent packed bits
+
+	fwrite(&t, 4, 1, f);
+	fwrite(&nbits, 4, 1, f);
+
+	for (unsigned int i = 0; i < nbits; i++) {
+		fwrite(&(bits[i]), 4, 1, f);
+	}
+
+	fflush(f);
+	fclose(f);
+}
+
 #if 0
 // Create a hamming window of windowLength samples in buffer
 vec hamming(int window_sz) {

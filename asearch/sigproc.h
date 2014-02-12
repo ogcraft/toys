@@ -10,7 +10,7 @@ May 2004
 #include "filters.h"
 
 /** Read wave from file. */
-float * wavread(char * fn, unsigned int * nsamples, unsigned int * freq);
+float * wavread(const char * fn, unsigned int * nsamples, unsigned int * freq);
 
 
 /** Given a set of filters to use and a wave sample, convert wave sample to

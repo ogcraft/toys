@@ -77,7 +77,7 @@ typedef struct WavHeader_t {
 
 /** Read a wav file.  Convert to float of range [-1, 1], mono.
     Returns pointer to data, number of samples read, and sample frequency. */
-float * wavread(char * fn, unsigned int * nsamples, unsigned int * freq) {
+float * wavread(const char * fn, unsigned int * nsamples, unsigned int * freq) {
 	assert(fn);
 	assert(nsamples);
 	assert(freq);
