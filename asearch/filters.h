@@ -36,4 +36,6 @@ public:
 /// Reads a list of filters from file fn.
 vector<Filter> readFilters(char * fn);
 
+vector<Filter> prepare_filters(const char* fstr[], size_t sz);
+
 #endif

@@ -15,7 +15,39 @@
 using namespace arma;
 
 
-
+const char* filters1[] = 
+{"26752 -4.37515e-07 0.260836",
+"23871 -2.44615e-05 0.263986",
+"26777 -3.69244e-08 0.267763",
+"4635 -1.13672e-05 0.269428",
+"2937 5.28804e-09 0.271896",
+"27405 -0.000126494 0.272362",
+"10782 4.27478e-08 0.272609",
+"21033 -6.7912e-07 0.276099",
+"27117 8.07178e-06 0.277762",
+"27072 2.46044e-05 0.27883",
+"24228 4.11255e-07 0.281743",
+"23838 0.000228396 0.284479",
+"17165 -1.19495e-07 0.286304",
+"25263 0.000398279 0.287066",
+"20721 7.15095e-07 0.288913",
+"8502 -2.78361e-07 0.290424",
+"17175 -1.08429e-08 0.292219",
+"17811 -3.29527e-08 0.292554",
+"27495 -4.47575e-07 0.290119",
+"23538 -3.04273e-09 0.294539",
+"8205 4.02691e-07 0.293525",
+"12177 1.16873e-06 0.293832",
+"27051 -0.000902544 0.296453",
+"27111 -2.38425e-05 0.297428",
+"21779 -1.0669e-07 0.297302",
+"14817 -9.52849e-09 0.299",
+"27087 1.22163e-05 0.296502",
+"27081 -2.8758e-09 0.300112",
+"20394 1.28237e-06 0.298693",
+"28209 0.000624447 0.29812",
+"23533 -2.19406e-06 0.299773",
+"23865 -1.28037e-08 0.300777"};
 
 //const char* chimes_wav = "/Users/olegg/git/toys/asearch/chimes.wav";
 //const char* prom_dvd = "/Users/olegg/asearchdata/prometheus-02-eng-dvd.wav";
@@ -90,15 +122,22 @@ for (;;)
 int test1(const char* wavfn) 
 {
     
-  vector<Filter> filters;
   printf ("Reading %s...\n", wavfn);
   unsigned int nsamples = 0, freq = 0;
+  
   float * samples = wavread(wavfn, &nsamples, &freq);
 
   if (!samples) {
     printf("Error reading wave file.\n");
     return 0;
   }
+  
+  printf("Read %u samples freq: %d\n", nsamples, freq);
+  printf("Goin prepare %d filters\n", ARRAY_LEN(filters1));
+
+  vector<Filter> filters = prepare_filters(filters1, ARRAY_LEN(filters1));
+  
+  printf("Read %u samples freq: %d\n", nsamples, freq);
 
   unsigned int nbits;
   unsigned int * bits = wav2bits(filters, samples, nsamples, freq, &nbits);
@@ -109,7 +148,7 @@ int test1(const char* wavfn)
 
   //writebits(bits, nbits, outfn);
   
-  for (unsigned int i = 0; i < 1000 /* nbits */; i++) {
+  for (unsigned int i = 0; i < 100 /* nbits */; i++) {
 	  std::bitset<32> b(bits[i]);
 	  std::cout << b << std::endl;
   }
@@ -129,23 +168,18 @@ int main(int argc, char* argv[])
   char  sndflile_ver [128] ;
   sf_command (NULL, SFC_GET_LIB_VERSION, sndflile_ver, sizeof (sndflile_ver)) ;
   std::cout << "Sndfile version: " << sndflile_ver << std::endl << std::endl;
-  //FingerprintExtractor fextr = FingerprintExtractor;
-  //std::cout << "fplib version: " << fingerprint::FingerprintExtractor::getVersion() << std::endl;
-
 
   if(argc < 2) {
     std::cout << "Usage: " << argv[0] << " wav_file_name" << std::endl;
     exit(1);
   }
 
-  //size_t min_duration_ms = fingerprint::FingerprintExtractor::getMinimumDurationMs();
-  //std::cout << "Minimal duartion if audio " << min_duration_ms << " msec";
   const char* wavfile = argv[1]; 
   std::cout << "Running " << argv[0] << " with '" << argv[1] << "'" << std::endl << std::endl;
   
+  return test1(wavfile);
+  
   dump_snd_file_info(wavfile);
-
-  vector<Filter> filters;// = readFilters(descrfn);
 
   SF_INFO sndinfo;
   SNDFILE *sndfile = sf_open(wavfile, SFM_READ, &sndinfo);
@@ -157,9 +191,6 @@ int main(int argc, char* argv[])
   int nchannels = sndinfo.channels;
 
 
-
-
-
   int err = sf_close(sndfile);
   if(err)
   {
@@ -167,7 +198,6 @@ int main(int argc, char* argv[])
     return 1;
   }
 
-  test1(wavfile);
   
   return ret;
 }
