@@ -33,12 +33,12 @@ Filter::Filter(unsigned int id, float threshold, float weight) {
 			t + 1);
 	}
 
-	for (unsigned int i = 0; i < time_lengths.size(); i++)
-		printf("Time Lengths %d %d\n", i, time_lengths[i]);
+//	for (unsigned int i = 0; i < time_lengths.size(); i++)
+//		printf("Time Lengths %d %d\n", i, time_lengths[i]);
 		
 	unsigned int filter_count = 0;
 	
-	printf("Filter(): time_lengths.size: %u\n", time_lengths.size() );	       
+//	printf("Filter(): time_lengths.size: %u\n", time_lengths.size() );	       
 
 	for (wt = 1; wt <= time_lengths.size(); wt++) {
 		for (wb = 1; wb <= NBANDS; wb++) {
@@ -128,7 +128,7 @@ vector<Filter> readFilters(char * fn) {
 		*/
 	}
 
-	printf("Read %d filters.\n", filters.size());
+	printf("Read %lu filters.\n", filters.size());
 
 	fclose(f);
 
@@ -157,7 +157,7 @@ vector<Filter> prepare_filters(const char* fstr[], size_t sz)
 		
 	}
 
-	printf("Read %d filters.\n", filters.size());
+	printf("Prepared %lu filters.\n", filters.size());
 
 	return filters;
 }

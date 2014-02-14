@@ -7,6 +7,9 @@ add_executable (asearch
 	sigproc.cpp
 	filters.cpp)
 
+add_executable (amatch 
+	amatch.cpp 
+	)
 target_link_libraries (asearch 
 	#/home/olegg/src/Fingerprinter/lib/libfplib.a 
 	fftw3 

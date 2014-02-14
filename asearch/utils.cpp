@@ -19,7 +19,8 @@ sf_count_t load_stereo_file_into_matrix(SNDFILE *sndfile, sf_count_t nframes, ma
   return count;
 }
 
-void writebits(unsigned int bits[], unsigned int nbits, char * fn) {
+void writebits(unsigned int bits[], unsigned int nbits, const char* fn)
+{
 	FILE * f = fopen(fn, "wb");
 	if (!f) {
 		printf("Error: Can't open %s for writing.\n", fn);
