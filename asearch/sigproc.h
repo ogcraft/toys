@@ -9,6 +9,7 @@ May 2004
 
 #include "filters.h"
 
+void dump_sf_info(const SF_INFO& sf_info, const char* msg);
 /** Read wave from file. */
 float * wavread(const char * fn, unsigned int * nsamples, unsigned int * freq);
 

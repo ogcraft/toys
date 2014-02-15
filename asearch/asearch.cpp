@@ -12,7 +12,7 @@
 #include "sigproc.h"
 
 using namespace arma;
-
+using namespace std;
 
 const char* filters1[] = 
 {"26752 -4.37515e-07 0.260836",
@@ -53,30 +53,6 @@ const char* filters1[] =
 //const char* prom_tst = "/Users/olegg/asearchdata/prometheus-ts.wav";
 //const char* dq = "/Users/olegg/asearchdata/dancingqueen.wav";
 
-void dump_sf_info(const SF_INFO& sf_info, const char* msg = "")
-{
-	typedef struct
-	{   
-		sf_count_t  frames ;     /* Used to be called samples. */
-		int         samplerate ;
-		int         channels ;
-		int         format ;
-		int         sections ;
-		int         seekable ;
-	} SF_INFO ;
-
-	SF_FORMAT_INFO  format_info;
-
-	format_info.format = sf_info.format ;
-	sf_command (NULL, SFC_GET_FORMAT_INFO, &format_info, sizeof (format_info)) ;
-
-	std::cout << "SF_INFO " << msg 
-		<< " frames:" << sf_info.frames << " samplerate:" << sf_info.samplerate 
-		<< " channels:" << sf_info.channels 
-		<< " format: 0x" << std::hex << sf_info.format << std::dec << " '" << format_info.name << "'"
-		<< " sections:" << sf_info.sections << " seekable:" << sf_info.seekable 
-		<< std::endl;  
-}
 
 void dump_snd_file_info(const char* fn)
 {
@@ -160,7 +136,6 @@ int test1(const string& wavfn)
 
 }
 
-
 int main(int argc, char* argv[])
 {
 	int ret = 0;
@@ -181,8 +156,7 @@ int main(int argc, char* argv[])
 	dump_snd_file_info(wavfile);
 
 	return test1(wavfile);
-
-
+	
 	SF_INFO sndinfo;
 	SNDFILE *sndfile = sf_open(wavfile, SFM_READ, &sndinfo);
 	if (sndfile == NULL) {
@@ -191,7 +165,8 @@ int main(int argc, char* argv[])
 	}
 
 	int nchannels = sndinfo.channels;
-
+	int nframes = sndinfo.frames;
+	
 	int err = sf_close(sndfile);
 	if(err)
 	{

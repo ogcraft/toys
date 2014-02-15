@@ -9,6 +9,7 @@ August 2004
 #include <assert.h>
 #include <vector>
 #include <bitset>
+#include <sndfile.h>
 
 using namespace std;
 
@@ -77,7 +78,7 @@ typedef struct WavHeader_t {
 
 /** Read a wav file.  Convert to float of range [-1, 1], mono.
     Returns pointer to data, number of samples read, and sample frequency. */
-float * wavread(const char * fn, unsigned int * nsamples, unsigned int * freq) {
+float * wavread1(const char * fn, unsigned int * nsamples, unsigned int * freq) {
 	assert(fn);
 	assert(nsamples);
 	assert(freq);
@@ -172,6 +173,89 @@ float * wavread(const char * fn, unsigned int * nsamples, unsigned int * freq) {
 
 	return samples;
 	
+}
+
+void dump_sf_info(const SF_INFO& sf_info, const char* msg = "")
+{
+	typedef struct
+	{   
+		sf_count_t  frames ;     /* Used to be called samples. */
+		int         samplerate ;
+		int         channels ;
+		int         format ;
+		int         sections ;
+		int         seekable ;
+	} SF_INFO ;
+
+	SF_FORMAT_INFO  format_info;
+
+	format_info.format = sf_info.format ;
+	sf_command (NULL, SFC_GET_FORMAT_INFO, &format_info, sizeof (format_info)) ;
+
+	std::cout << "SF_INFO " << msg 
+		<< " frames:" << sf_info.frames << " samplerate:" << sf_info.samplerate 
+		<< " channels:" << sf_info.channels 
+		<< " format: 0x" << std::hex << sf_info.format << std::dec << " '" << format_info.name << "'"
+		<< " sections:" << sf_info.sections << " seekable:" << sf_info.seekable 
+		<< std::endl;  
+}
+
+float * wavread(const char * fn, unsigned int * nsamples, unsigned int * freq) {
+	assert(fn);
+	assert(nsamples);
+	assert(freq);
+	
+	SF_INFO sndinfo;
+	SNDFILE *sndfile = sf_open(fn, SFM_READ, &sndinfo);
+	if (sndfile == NULL) {
+		std::cout << "Error reading source file '" << fn << "': " << sf_strerror(sndfile) << std::endl;
+		return NULL;
+	}
+	
+	dump_sf_info(sndinfo,"");
+
+	if (sndinfo.format != 0x010002) {
+		printf("Unrecognized audio format 0x%x\n", sndinfo.format);
+		return NULL;
+	}
+	
+	*nsamples = sndinfo.frames;
+	*freq = sndinfo.samplerate;
+
+	float* samples = (float*) malloc(sizeof(float) * sndinfo.frames);
+
+	unsigned int samplesleft = *nsamples;
+
+	const uint32_t BLOCKSIZE = 4096;
+
+	while (samplesleft > 0) {
+		float block[BLOCKSIZE]={0.0};
+		
+		sf_count_t nread = sf_read_float(sndfile, block, MIN(BLOCKSIZE, samplesleft * sndinfo.channels)) ;
+		
+		if (sndinfo.channels == 1) {
+
+			for (unsigned int i = 0; i < nread; i++) {
+				samples[*nsamples - samplesleft + i] = block[i];
+			}
+			
+		} else { // assume channels == 2
+
+			for (unsigned int i = 0; i < nread; i += 2) {
+				samples[*nsamples - samplesleft + i/2] = (block[i] + block[i+1]) / 2.0;
+			}
+		}
+
+		samplesleft -= nread / sndinfo.channels;
+	}
+
+	/*
+	for (unsigned int i = 1000000; i < 2000000; i += 100)
+		printf("%f\n", samples[i]);
+	*/
+
+	sf_close(sndfile);
+	return samples;
 }
 
 // Filter length for the following filters.

@@ -24,7 +24,7 @@ Filter::Filter(unsigned int id, float threshold, float weight) {
 	unsigned int t = 1;
 	vector<unsigned int> time_lengths;
 
-	printf("Filter(): KEYWIDTH: %u\n", KEYWIDTH );	       
+	//printf("Filter(): KEYWIDTH: %u\n", KEYWIDTH );	       
 
 	while (t < KEYWIDTH) {
 		time_lengths.push_back(t);
@@ -146,13 +146,13 @@ vector<Filter> prepare_filters(const char* fstr[], size_t sz)
 	vector<Filter> filters;
 	for( int i=0; i < sz; i++)
 	{	
-		printf("Creating filter: %s\n", fstr[i]);
+		//printf("Creating filter: %s\n", fstr[i]);
 		if(sscanf(fstr[i], "%d %f %f", &ftid, &thresh, &weight) == 3) 
 		{
 			Filter ft = Filter(ftid, thresh, weight);
 			filters.push_back(ft);
-			printf("ID: %d   wt: %d  wb: %d fb: %d type: %d\n",
-					ft.id, ft.wt, ft.wb, ft.first_band, ft.filter_type);
+			//printf("ID: %d   wt: %d  wb: %d fb: %d type: %d\n",
+			//		ft.id, ft.wt, ft.wb, ft.first_band, ft.filter_type);
 		}
 		
 	}
