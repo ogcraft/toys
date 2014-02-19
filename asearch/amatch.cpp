@@ -4,9 +4,15 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <bitset>
 
 using namespace std;
-
+#ifdef _WIN32 
+unsigned int bit_count(unsigned int x)
+{
+    return bitset<32>(x).count();
+}
+#else
 unsigned int bit_count(unsigned int x)
 {
   x = (((x >> 1) & 0b01010101010101010101010101010101)
@@ -21,6 +27,7 @@ unsigned int bit_count(unsigned int x)
        + x       & 0b00000000000000001111111111111111); 
   return x;
 }
+#endif
 
 const int PROBE_SZ = 15 * 86;
 
@@ -50,6 +57,10 @@ int calc_distance(int s, vector<uint32_t>& track_keys, vector<uint32_t>& sample_
 
 int main(int argc, char* argv[])
 {
+    if(argc < 3) {
+        cout << "Usage: amatch track_fn sample_fn" << endl;
+        return 1;
+    }
 	string track_fn(argv[1]);
 	string sample_fn(argv[2]);
 	//cout << "Track: " << track_fn << endl;
@@ -97,7 +108,7 @@ int main(int argc, char* argv[])
 	vector< pair<int, int> > diffs;
 	pair<int,int> m;
 	int idx = 0;
-	int i = 0;
+	size_t i = 0;
 	for(; i < track_keys.size() - 85*20 ; i++) {
 		int d = calc_distance(i, track_keys, sample_keys, PROBE_SZ);
 		diffs.push_back(make_pair(d,i));

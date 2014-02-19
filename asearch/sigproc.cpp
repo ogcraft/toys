@@ -19,8 +19,9 @@ using namespace std;
 #include "filters.h"
 
 #include "sigproc.h"
+#include <math.h>
 
-
+//#if 0
 // frames overlap 31/32
 #define OVERLAP 32
 // Tried 15/16 but doesn't work as well
@@ -139,7 +140,7 @@ float * wavread1(const char * fn, unsigned int * nsamples, unsigned int * freq) 
 
 	unsigned int samplesleft = *nsamples;
 
-	unsigned int BLOCKSIZE = 4096;
+	const unsigned int BLOCKSIZE = 4096;
 
 	while (samplesleft > 0) {
 		short int block[BLOCKSIZE];

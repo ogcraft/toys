@@ -1,7 +1,7 @@
 #include "utils.h"
 
-using namespace arma;
-
+//using namespace arma;
+#if 0
 /* Open stereo file and place channels in rows of a matrix */
 sf_count_t load_stereo_file_into_matrix(SNDFILE *sndfile, sf_count_t nframes, mat& data )
 {
@@ -18,7 +18,7 @@ sf_count_t load_stereo_file_into_matrix(SNDFILE *sndfile, sf_count_t nframes, ma
   }
   return count;
 }
-
+#endif
 void writebits(unsigned int bits[], unsigned int nbits, const char* fn)
 {
 	FILE * f = fopen(fn, "wb");

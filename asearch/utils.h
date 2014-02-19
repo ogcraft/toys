@@ -8,15 +8,25 @@
 #include <memory>
 
 #include <sndfile.h>
-#include <armadillo>
+//#include <armadillo>
 
 #define ARRAY_LEN(x)  ((int) (sizeof (x) / sizeof (x [0])))
 #define MAX(x,y)    ((x) > (y) ? (x) : (y))
 #define MIN(x,y)    ((x) < (y) ? (x) : (y))
 
+#ifdef _WIN32
+//float round(float x)
+//{
+//   return x >= 0.0f ? floorf(x + 0.5f) : ceilf(x - 0.5f);
+//}
+static inline double round(double val)
+{    
+    return floor(val + 0.5);
+}
+#endif
+
 /* Open stereo file and place channels in rows of a matrix */
-sf_count_t load_stereo_file_into_matrix(SNDFILE *sndfile, sf_count_t nframes, arma::mat& data );
-void spectrogram(const arma::mat& S, int window_sz, int hop_sz, arma::mat& result);
+//void spectrogram(const arma::mat& S, int window_sz, int hop_sz, arma::mat& result);
 void writebits(unsigned int bits[], unsigned int nbits, const char * fn);
 
 

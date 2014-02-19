@@ -7,11 +7,11 @@
 #include <bitset>         // std::bitset
 
 #include <sndfile.h>
-#include "armadillo"
+//#include "armadillo"
 #include "utils.h"
 #include "sigproc.h"
 
-using namespace arma;
+//using namespace arma;
 using namespace std;
 
 const char* filters1[] = 
@@ -47,12 +47,6 @@ const char* filters1[] =
 	"28209 0.000624447 0.29812",
 	"23533 -2.19406e-06 0.299773",
 	"23865 -1.28037e-08 0.300777"};
-
-//const char* chimes_wav = "/Users/olegg/git/toys/asearch/chimes.wav";
-//const char* prom_dvd = "/Users/olegg/asearchdata/prometheus-02-eng-dvd.wav";
-//const char* prom_tst = "/Users/olegg/asearchdata/prometheus-ts.wav";
-//const char* dq = "/Users/olegg/asearchdata/dancingqueen.wav";
-
 
 void dump_snd_file_info(const char* fn)
 {
@@ -140,7 +134,7 @@ int main(int argc, char* argv[])
 {
 	int ret = 0;
 
-	std::cout << "Armadillo version: " << arma_version::as_string() << std::endl;
+//	std::cout << "Armadillo version: " << arma_version::as_string() << std::endl;
 	char  sndflile_ver [128] ;
 	sf_command (NULL, SFC_GET_LIB_VERSION, sndflile_ver, sizeof (sndflile_ver)) ;
 	std::cout << "Sndfile version: " << sndflile_ver << std::endl << std::endl;
