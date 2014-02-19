@@ -128,7 +128,7 @@ vector<Filter> readFilters(char * fn) {
 		*/
 	}
 
-	printf("Read %lu filters.\n", filters.size());
+	printf("Read %d filters.\n", filters.size());
 
 	fclose(f);
 
@@ -157,7 +157,7 @@ vector<Filter> prepare_filters(const char* fstr[], size_t sz)
 		
 	}
 
-	printf("Prepared %lu filters.\n", filters.size());
+	printf("Prepared %d filters.\n", filters.size());
 
 	return filters;
 }
