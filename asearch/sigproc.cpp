@@ -10,6 +10,7 @@ August 2004
 #include <vector>
 #include <bitset>
 #include <sndfile.h>
+#include <stdint.h>
 
 using namespace std;
 
