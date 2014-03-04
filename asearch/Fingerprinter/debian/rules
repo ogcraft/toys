@@ -1,9 +1,0 @@
-#!/usr/bin/make -f
-
-export DH_VERBOSE=1
-
-%:
-	dh $@
-
-override_dh_auto_configure:
-	cmake -D CMAKE_INSTALL_PREFIX:PATH=/usr/ .
