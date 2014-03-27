@@ -5,9 +5,9 @@ PACKAGE_PATH=com/example/testapp
 PACKAGE=com.example.testapp
 MAIN_CLASS=MainActivity
 
-AAPT_PATH=$ANDROID_SDK_ROOT/build-tools/android-4.4/aapt
-DX_PATH=$ANDROID_SDK_ROOT/build-tools/android-4.4/dx
-ANDROID_JAR=$ANDROID_SDK_ROOT/platforms/android-19/android.jar
+AAPT_PATH=$ANDROID_SDK_ROOT/platform-tools/aapt
+DX_PATH=$ANDROID_SDK_ROOT/platform-tools/dx
+ANDROID_JAR=$ANDROID_SDK_ROOT/platforms/android-17/android.jar
 ADB=$ANDROID_SDK_ROOT/platform-tools/adb
 DEV_HOME=$PWD
 
